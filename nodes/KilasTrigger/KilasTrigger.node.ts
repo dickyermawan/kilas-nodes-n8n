@@ -145,11 +145,18 @@ export class KilasTrigger implements INodeType {
                 const sessionId = this.getNodeParameter('sessionId') as string;
                 const credentials = await this.getCredentials('kilasApi');
                 const baseUrl = credentials.baseUrl as string;
+                const apiKey = credentials.apiKey as string;
+
+                const headers: IDataObject = {};
+                if (apiKey) {
+                    headers['x-api-key'] = apiKey;
+                }
 
                 try {
                     const response = await this.helpers.request({
                         method: 'GET',
                         url: `${baseUrl}/api/webhook/${sessionId}`,
+                        headers,
                         json: true,
                     });
 
@@ -164,6 +171,12 @@ export class KilasTrigger implements INodeType {
                 const events = this.getNodeParameter('events') as string[];
                 const credentials = await this.getCredentials('kilasApi');
                 const baseUrl = credentials.baseUrl as string;
+                const apiKey = credentials.apiKey as string;
+
+                const headers: IDataObject = {};
+                if (apiKey) {
+                    headers['x-api-key'] = apiKey;
+                }
 
                 try {
                     await this.helpers.request({
@@ -173,6 +186,7 @@ export class KilasTrigger implements INodeType {
                             webhookUrl,
                             events,
                         },
+                        headers,
                         json: true,
                     });
 
@@ -186,11 +200,18 @@ export class KilasTrigger implements INodeType {
                 const sessionId = this.getNodeParameter('sessionId') as string;
                 const credentials = await this.getCredentials('kilasApi');
                 const baseUrl = credentials.baseUrl as string;
+                const apiKey = credentials.apiKey as string;
+
+                const headers: IDataObject = {};
+                if (apiKey) {
+                    headers['x-api-key'] = apiKey;
+                }
 
                 try {
                     await this.helpers.request({
                         method: 'DELETE',
                         url: `${baseUrl}/api/webhook/${sessionId}`,
+                        headers,
                         json: true,
                     });
 
