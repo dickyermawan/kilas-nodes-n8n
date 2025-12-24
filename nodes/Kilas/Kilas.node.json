@@ -1,0 +1,20 @@
+{
+    "node": "n8n-nodes-base.kilas",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+        "Communication"
+    ],
+    "resources": {
+        "credentialDocumentation": [
+            {
+                "url": "https://github.com/dickyermawan/kilas"
+            }
+        ],
+        "primaryDocumentation": [
+            {
+                "url": "https://github.com/dickyermawan/kilas"
+            }
+        ]
+    }
+}

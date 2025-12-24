@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#25D366;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#128C7E;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Chat bubble -->
+  <path d="M 32 8 C 16.5 8 4 18.5 4 31.5 C 4 38.5 7.5 44.5 13 48.5 L 10 56 L 18.5 52.5 C 22.5 54.5 27 55.5 32 55.5 C 47.5 55.5 60 45 60 31.5 C 60 18.5 47.5 8 32 8 Z" 
+        fill="url(#grad1)" stroke="none"/>
+  
+  <!-- Lightning bolt -->
+  <path d="M 35 18 L 26 32 L 32 32 L 29 46 L 42 28 L 35 28 Z" 
+        fill="#FFFFFF" stroke="none"/>
+</svg>
