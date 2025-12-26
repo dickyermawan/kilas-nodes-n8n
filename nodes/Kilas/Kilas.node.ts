@@ -110,6 +110,12 @@ export class Kilas implements INodeType {
                         description: 'Stop typing indicator',
                         action: 'Stop typing indicator',
                     },
+                    {
+                        name: 'Check Message Status',
+                        value: 'checkStatus',
+                        description: 'Check delivery status of a sent message',
+                        action: 'Check message status',
+                    },
                 ],
                 default: 'sendText',
             },
@@ -327,6 +333,21 @@ export class Kilas implements INodeType {
                 default: '',
                 placeholder: '3EB0123456789ABCDEF',
                 description: 'Optional: Message ID to quote/reply to (get from webhook events)',
+            },
+            {
+                displayName: 'Message ID',
+                name: 'messageId',
+                type: 'string',
+                required: true,
+                displayOptions: {
+                    show: {
+                        resource: ['message'],
+                        operation: ['checkStatus'],
+                    },
+                },
+                default: '',
+                placeholder: '3EB0ABC123XYZ',
+                description: 'The message ID to check status for (from send response or webhook events)',
             },
 
             // Message Fields - Send Image
@@ -920,6 +941,15 @@ export class Kilas implements INodeType {
                                 sessionId,
                                 chatId,
                             },
+                            headers: defaultHeaders,
+                            json: true,
+                        });
+                    } else if (operation === 'checkStatus') {
+                        const messageId = this.getNodeParameter('messageId', i) as string;
+
+                        responseData = await this.helpers.request({
+                            method: 'GET',
+                            url: `${baseUrl}/api/messages/status/${messageId}`,
                             headers: defaultHeaders,
                             json: true,
                         });

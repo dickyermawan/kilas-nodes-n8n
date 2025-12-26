@@ -49,6 +49,7 @@ The main node for interacting with Kilas WhatsApp Gateway.
 - Send Location - Send a location with coordinates
 - Start Typing - Show "typing..." indicator
 - Stop Typing - Hide "typing..." indicator
+- Check Message Status - Check delivery status (pending/sent/delivered/read)
 
 **Session**
 - Get All - Get all active sessions
@@ -172,6 +173,12 @@ For issues related to:
 - **n8n platform**: Visit [n8n community forum](https://community.n8n.io/)
 
 ## Version History
+
+### 1.2.0
+- Added Check Message Status operation to check delivery status (pending/sent/delivered/read)
+
+### 1.1.3
+- Fixed Kilas Trigger authentication - API key now properly sent in webhook operations
 
 ### 1.1.2
 - Changed package name to scoped package: `@dickyermawan/n8n-nodes-kilas`
