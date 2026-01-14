@@ -370,6 +370,10 @@ export class Kilas implements INodeType {
                         name: 'Base64 String',
                         value: 'base64',
                     },
+                    {
+                        name: 'URL',
+                        value: 'url',
+                    },
                 ],
                 default: 'binary',
                 description: 'How to provide the image data',
@@ -409,6 +413,22 @@ export class Kilas implements INodeType {
                 },
             },
             {
+                displayName: 'Image URL',
+                name: 'imageUrl',
+                type: 'string',
+                required: true,
+                displayOptions: {
+                    show: {
+                        resource: ['message'],
+                        operation: ['sendImage'],
+                        imageInputType: ['url'],
+                    },
+                },
+                default: '',
+                placeholder: 'https://example.com/image.jpg',
+                description: 'URL of the image to send (Baileys will download and send automatically)',
+            },
+            {
                 displayName: 'Caption',
                 name: 'caption',
                 type: 'string',
@@ -442,6 +462,10 @@ export class Kilas implements INodeType {
                     {
                         name: 'Base64 String',
                         value: 'base64',
+                    },
+                    {
+                        name: 'URL',
+                        value: 'url',
                     },
                 ],
                 default: 'binary',
@@ -482,6 +506,22 @@ export class Kilas implements INodeType {
                 },
             },
             {
+                displayName: 'Document URL',
+                name: 'documentUrl',
+                type: 'string',
+                required: true,
+                displayOptions: {
+                    show: {
+                        resource: ['message'],
+                        operation: ['sendDocument'],
+                        documentInputType: ['url'],
+                    },
+                },
+                default: '',
+                placeholder: 'https://example.com/document.pdf',
+                description: 'URL of the document to send (Baileys will download and send automatically)',
+            },
+            {
                 displayName: 'Filename',
                 name: 'filename',
                 type: 'string',
@@ -489,12 +529,12 @@ export class Kilas implements INodeType {
                     show: {
                         resource: ['message'],
                         operation: ['sendDocument'],
-                        documentInputType: ['base64'],
+                        documentInputType: ['base64', 'url'],
                     },
                 },
                 default: '',
                 placeholder: 'document.pdf',
-                description: 'Filename for the document (required for base64)',
+                description: 'Filename for the document (required for base64/URL)',
             },
             {
                 displayName: 'MIME Type',
@@ -504,7 +544,7 @@ export class Kilas implements INodeType {
                     show: {
                         resource: ['message'],
                         operation: ['sendDocument'],
-                        documentInputType: ['base64'],
+                        documentInputType: ['base64', 'url'],
                     },
                 },
                 default: '',
@@ -773,14 +813,22 @@ export class Kilas implements INodeType {
         const operation = this.getNodeParameter('operation', 0) as string;
 
         const credentials = await this.getCredentials('kilasApi');
-        const baseUrl = credentials.baseUrl as string;
+        // Remove trailing slash to prevent double slash in URL
+        const baseUrl = (credentials.baseUrl as string).replace(/\/+$/, '');
         const apiKey = credentials.apiKey as string;
 
         // Prepare headers with API key if provided
-        const defaultHeaders: IDataObject = {};
+        const defaultHeaders: IDataObject = {
+            'Content-Type': 'application/json',
+        };
         if (apiKey) {
             defaultHeaders['x-api-key'] = apiKey;
         }
+
+        // Default request options with 120 second timeout
+        const requestOptions = {
+            timeout: 120000, // 120 seconds
+        };
 
         for (let i = 0; i < items.length; i++) {
             try {
@@ -811,6 +859,7 @@ export class Kilas implements INodeType {
                             body,
                             headers: defaultHeaders,
                             json: true,
+                            timeout: requestOptions.timeout,
                         });
                     } else if (operation === 'sendImage') {
                         const inputType = this.getNodeParameter('imageInputType', i) as string;
@@ -839,8 +888,9 @@ export class Kilas implements INodeType {
                                 formData,
                                 headers: defaultHeaders,
                                 json: true,
+                                timeout: requestOptions.timeout,
                             });
-                        } else {
+                        } else if (inputType === 'base64') {
                             const base64Image = this.getNodeParameter('base64Image', i) as string;
 
                             responseData = await this.helpers.request({
@@ -851,6 +901,21 @@ export class Kilas implements INodeType {
                                     chatId,
                                     caption,
                                     image: base64Image,
+                                },
+                                headers: defaultHeaders,
+                                json: true,
+                            });
+                        } else if (inputType === 'url') {
+                            const imageUrl = this.getNodeParameter('imageUrl', i) as string;
+
+                            responseData = await this.helpers.request({
+                                method: 'POST',
+                                url: `${baseUrl}/api/messages/send-image`,
+                                body: {
+                                    sessionId,
+                                    chatId,
+                                    caption,
+                                    imageUrl,
                                 },
                                 headers: defaultHeaders,
                                 json: true,
@@ -884,7 +949,7 @@ export class Kilas implements INodeType {
                                 headers: defaultHeaders,
                                 json: true,
                             });
-                        } else {
+                        } else if (inputType === 'base64') {
                             const base64Document = this.getNodeParameter('base64Document', i) as string;
                             const filename = this.getNodeParameter('filename', i) as string;
                             const mimetype = this.getNodeParameter('mimetype', i) as string;
@@ -899,6 +964,25 @@ export class Kilas implements INodeType {
                                     filename,
                                     mimetype,
                                     document: base64Document,
+                                },
+                                headers: defaultHeaders,
+                                json: true,
+                            });
+                        } else if (inputType === 'url') {
+                            const documentUrl = this.getNodeParameter('documentUrl', i) as string;
+                            const filename = this.getNodeParameter('filename', i, '') as string;
+                            const mimetype = this.getNodeParameter('mimetype', i, '') as string;
+
+                            responseData = await this.helpers.request({
+                                method: 'POST',
+                                url: `${baseUrl}/api/messages/send-document`,
+                                body: {
+                                    sessionId,
+                                    chatId,
+                                    caption,
+                                    documentUrl,
+                                    filename,
+                                    mimetype,
                                 },
                                 headers: defaultHeaders,
                                 json: true,

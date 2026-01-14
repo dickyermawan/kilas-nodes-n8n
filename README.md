@@ -44,8 +44,8 @@ The main node for interacting with Kilas WhatsApp Gateway.
 **Message**
 - Send Text - Send a text message
 - Send Text with Quote/Reply - Reply to a specific message
-- Send Image - Send an image (binary or base64)
-- Send Document - Send a document (binary or base64)
+- Send Image - Send an image (binary, base64, or **URL**)
+- Send Document - Send a document (binary, base64, or **URL**)
 - Send Location - Send a location with coordinates
 - Start Typing - Show "typing..." indicator
 - Stop Typing - Hide "typing..." indicator
@@ -173,6 +173,11 @@ For issues related to:
 - **n8n platform**: Visit [n8n community forum](https://community.n8n.io/)
 
 ## Version History
+
+### 1.3.0
+- Added URL input type for Send Image (use `imageUrl` parameter)
+- Added URL input type for Send Document (use `documentUrl` parameter)
+- Baileys downloads and sends media directly from URLs
 
 ### 1.2.0
 - Added Check Message Status operation to check delivery status (pending/sent/delivered/read)

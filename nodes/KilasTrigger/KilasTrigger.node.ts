@@ -144,7 +144,8 @@ export class KilasTrigger implements INodeType {
                 const webhookUrl = this.getNodeWebhookUrl('default');
                 const sessionId = this.getNodeParameter('sessionId') as string;
                 const credentials = await this.getCredentials('kilasApi');
-                const baseUrl = credentials.baseUrl as string;
+                // Remove trailing slash to prevent double slash in URL
+                const baseUrl = (credentials.baseUrl as string).replace(/\/+$/, '');
                 const apiKey = credentials.apiKey as string;
 
                 const headers: IDataObject = {};
@@ -170,7 +171,8 @@ export class KilasTrigger implements INodeType {
                 const sessionId = this.getNodeParameter('sessionId') as string;
                 const events = this.getNodeParameter('events') as string[];
                 const credentials = await this.getCredentials('kilasApi');
-                const baseUrl = credentials.baseUrl as string;
+                // Remove trailing slash to prevent double slash in URL
+                const baseUrl = (credentials.baseUrl as string).replace(/\/+$/, '');
                 const apiKey = credentials.apiKey as string;
 
                 const headers: IDataObject = {};
@@ -199,7 +201,8 @@ export class KilasTrigger implements INodeType {
             async delete(this: IHookFunctions): Promise<boolean> {
                 const sessionId = this.getNodeParameter('sessionId') as string;
                 const credentials = await this.getCredentials('kilasApi');
-                const baseUrl = credentials.baseUrl as string;
+                // Remove trailing slash to prevent double slash in URL
+                const baseUrl = (credentials.baseUrl as string).replace(/\/+$/, '');
                 const apiKey = credentials.apiKey as string;
 
                 const headers: IDataObject = {};
